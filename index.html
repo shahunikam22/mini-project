@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tractor Fleet Flow — Cloud Agri-Fleet & Financing Platform</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP NOTIFICATION BANNER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Brand -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-green-600/20">
+            <i data-lucide="tractor" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-lg tracking-tight text-slate-900">Tractor Fleet Flow</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Cloud Sync Active</span>
+            </div>
+            <p class="text-xs text-slate-500 hidden sm:block">Unified Agricultural Machinery, Scheme & Loan Network</p>
+          </div>
+        </div>
+
+        <!-- Right Side: Cloud Status & Auth Profile -->
+        <div class="flex items-center gap-4">
+          <!-- Realtime Sync Pill -->
+          <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs text-slate-600">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span id="syncStatusText">Cloud DB: Online</span>
+          </div>
+
+          <!-- Region Indicator -->
+          <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-xs font-medium text-amber-900">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span id="activeRegionBadge">Region: All (National)</span>
+          </div>
+
+          <!-- Active User Badge & Switch Role Button -->
+          <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+            <div class="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold text-xs" id="userAvatar">
+              AD
+            </div>
+            <div class="text-left hidden lg:block pr-2">
+              <div class="text-xs font-bold text-slate-900 leading-tight" id="userNameText">System Administrator</div>
+              <div class="text-[10px] uppercase font-semibold text-emerald-600" id="userRoleText">Admin Role</div>
+            </div>
+            <button onclick="openLoginModal()" class="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 rounded-lg border border-slate-200 shadow-sm transition flex items-center gap-1">
+              <i data-lucide="arrow-left-right" class="w-3 h-3"></i>
+              Switch Role
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-slate-50 border-t border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex space-x-1 sm:space-x-4 overflow-x-auto custom-scroll py-2" id="navTabs">
+          <button onclick="switchTab('dashboard')" class="nav-tab active-tab px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 text-emerald-700 bg-emerald-100/70" data-tab="dashboard">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            Dashboard
+          </button>
+          <button onclick="switchTab('farmers')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="farmers">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            Farmers
+          </button>
+          <button onclick="switchTab('tractors')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="tractors">
+            <i data-lucide="tractor" class="w-4 h-4"></i>
+            Tractor Fleet
+          </button>
+          <button onclick="switchTab('dealers')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="dealers">
+            <i data-lucide="building-2" class="w-4 h-4"></i>
+            Dealers
+          </button>
+          <button onclick="switchTab('schemes')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="schemes">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            Schemes & Subsidies
+          </button>
+          <button onclick="switchTab('purchases')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="purchases">
+            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+            Purchases (Linked)
+          </button>
+          <button onclick="switchTab('loans')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition flex items-center gap-2" data-tab="loans">
+            <i data-lucide="landmark" class="w-4 h-4"></i>
+            Loans & Financing
+          </button>
+          <button onclick="switchTab('farmer360')" class="nav-tab px-3.5 py-2 rounded-lg text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 transition flex items-center gap-2" data-tab="farmer360">
+            <i data-lucide="sparkles" class="w-4 h-4 text-purple-600"></i>
+            Farmer 360° Dossier
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ROLE PERMISSION BANNER -->
+  <div id="roleScopeNotice" class="bg-blue-50 border-b border-blue-200 px-4 py-2 text-xs text-blue-800 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+        <span id="roleScopeNoticeText">Logged in as <b>Administrator</b>. Full access to add, edit, and link records across all regions.</span>
+      </div>
+      <button onclick="resetToSampleData()" class="text-[11px] underline font-semibold hover:text-blue-900">
+        Restore Demo Records
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-pane space-y-6">
+      <!-- KPI Top Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Farmers</span>
+            <div class="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-bold text-slate-900 mt-2" id="kpiFarmers">0</div>
+          <div class="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> Connected across regions
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tractor Fleet</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+              <i data-lucide="tractor" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-bold text-slate-900 mt-2" id="kpiTractors">0</div>
+          <div class="text-xs text-slate-500 font-medium mt-1" id="kpiTractorsSub">0 Available / 0 Sold</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Fleet Sales</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+              <i data-lucide="badge-indian-rupee" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-bold text-slate-900 mt-2" id="kpiSalesVolume">₹0</div>
+          <div class="text-xs text-blue-600 font-medium mt-1" id="kpiPurchasesCount">0 Purchases recorded</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Subsidies & Loans</span>
+            <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+              <i data-lucide="landmark" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-2xl font-bold text-slate-900 mt-2" id="kpiLoansVolume">₹0</div>
+          <div class="text-xs text-purple-600 font-medium mt-1" id="kpiSubsidiesVolume">₹0 Subsidies Disbursed</div>
+        </div>
+      </div>
+
+      <!-- Relational Integration Overview Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: Regional Distribution -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="map" class="w-4 h-4 text-emerald-600"></i>
+              Regional Fleet Distribution
+            </h3>
+            <span class="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">Live Geo</span>
+          </div>
+          <div class="space-y-3" id="regionalDistributionList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Middle: Quick Interlinked Actions -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="link-2" class="w-4 h-4 text-blue-600"></i>
+              Relational Actions (Connected Workflow)
+            </h3>
+          </div>
+          <p class="text-xs text-slate-500 mb-4">Add a farmer first; their ID automatically flows as a foreign key into purchases, schemes, and loans.</p>
+
+          <div class="space-y-2.5">
+            <button onclick="openAddFarmerModal()" class="w-full flex items-center justify-between p-3 rounded-xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 transition text-left group">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center group-hover:scale-105 transition">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">1. Add New Farmer (Core Entity)</div>
+                  <div class="text-[11px] text-slate-500">Generates unique Farmer ID & region</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            </button>
+
+            <button onclick="openAddPurchaseModal()" class="w-full flex items-center justify-between p-3 rounded-xl border border-blue-200 bg-blue-50/50 hover:bg-blue-50 transition text-left group">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center group-hover:scale-105 transition">
+                  <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">2. Record Tractor Purchase</div>
+                  <div class="text-[11px] text-slate-500">Links Farmer + Tractor + Scheme</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            </button>
+
+            <button onclick="openAddLoanModal()" class="w-full flex items-center justify-between p-3 rounded-xl border border-purple-200 bg-purple-50/50 hover:bg-purple-50 transition text-left group">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center group-hover:scale-105 transition">
+                  <i data-lucide="file-text" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">3. Apply Loan for Farmer</div>
+                  <div class="text-[11px] text-slate-500">Attaches financing to purchase</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Realtime Cloud Activity Stream -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="radio" class="w-4 h-4 text-emerald-600"></i>
+              Live Cloud Activity Feed
+            </h3>
+            <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold">Real-time</span>
+          </div>
+          <div class="flex-1 overflow-y-auto custom-scroll max-h-72 space-y-3" id="liveActivityFeed">
+            <!-- Feed entries -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Interconnected Transactions Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm">Recent Linked Fleet Purchases</h3>
+            <p class="text-xs text-slate-500">Live multi-table join between Farmer, Tractor, Dealer, Scheme & Loans</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="dashboardRegionFilter" onchange="renderAll()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 text-slate-700 font-medium">
+              <option value="ALL">All Regions</option>
+              <option value="North">North (Punjab, Haryana)</option>
+              <option value="West">West (Maharashtra, Gujarat)</option>
+              <option value="Central">Central (Madhya Pradesh)</option>
+              <option value="South">South (Karnataka, Andhra)</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Purchase ID</th>
+                <th class="px-4 py-3">Farmer (FK)</th>
+                <th class="px-4 py-3">Tractor (FK)</th>
+                <th class="px-4 py-3">Dealer (FK)</th>
+                <th class="px-4 py-3">Scheme Applied</th>
+                <th class="px-4 py-3">Net Amount</th>
+                <th class="px-4 py-3">Loan Financed</th>
+                <th class="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardPurchasesBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: FARMERS TABLE (PRIMARY ENTITY) -->
+    <section id="tab-farmers" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Farmers Master Registry</h2>
+          <p class="text-xs text-slate-500">Primary entity. Every tractor purchase, loan, and scheme application connects to this Farmer ID.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="searchFarmersInput" onkeyup="renderFarmers()" placeholder="Search by name, phone or ID..." class="text-xs px-3 py-2 border border-slate-200 rounded-lg w-52 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <button onclick="openAddFarmerModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add Farmer
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Farmer ID (PK)</th>
+                <th class="px-4 py-3">Full Name</th>
+                <th class="px-4 py-3">Phone</th>
+                <th class="px-4 py-3">Region</th>
+                <th class="px-4 py-3">Land Size</th>
+                <th class="px-4 py-3">Tractors Owned</th>
+                <th class="px-4 py-3">Active Loans</th>
+                <th class="px-4 py-3 text-right">Dossier / 360°</th>
+              </tr>
+            </thead>
+            <tbody id="farmersTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TRACTORS FLEET -->
+    <section id="tab-tractors" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Tractor Fleet & Machinery Inventory</h2>
+          <p class="text-xs text-slate-500">Stocked by Dealers. Tractors can be selected during purchase by Farmers.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openAddTractorModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add New Tractor
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="tractorsGrid">
+        <!-- Dynamically rendered tractor cards -->
+      </div>
+    </section>
+
+    <!-- TAB 4: DEALERS -->
+    <section id="tab-dealers" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Authorized Regional Dealerships</h2>
+          <p class="text-xs text-slate-500">Dealers can log in directly to manage their regional inventory and submit purchases.</p>
+        </div>
+        <button onclick="openAddDealerModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+          <i data-lucide="plus" class="w-4 h-4"></i> Register Dealer
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Dealer ID</th>
+                <th class="px-4 py-3">Dealership Name</th>
+                <th class="px-4 py-3">Contact Person</th>
+                <th class="px-4 py-3">Phone</th>
+                <th class="px-4 py-3">Region</th>
+                <th class="px-4 py-3">Fleet Inventory</th>
+                <th class="px-4 py-3">Sales Count</th>
+                <th class="px-4 py-3 text-right">Quick Login</th>
+              </tr>
+            </thead>
+            <tbody id="dealersTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: SCHEMES & SUBSIDIES -->
+    <section id="tab-schemes" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Government & Regional Subsidy Schemes</h2>
+          <p class="text-xs text-slate-500">Schemes can be applied at the time of purchase to reduce farmer payable amount.</p>
+        </div>
+        <button onclick="openAddSchemeModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+          <i data-lucide="plus" class="w-4 h-4"></i> Create New Scheme
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="schemesGrid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- TAB 6: PURCHASES (RELATIONAL JUNCTION) -->
+    <section id="tab-purchases" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Relational Purchases Ledger</h2>
+          <p class="text-xs text-slate-500">Every purchase connects a Farmer (FK), Tractor (FK), Dealer (FK), and optional Scheme (FK).</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openAddPurchaseModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> New Purchase Entry
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Purchase ID</th>
+                <th class="px-4 py-3">Date</th>
+                <th class="px-4 py-3">Farmer (FK)</th>
+                <th class="px-4 py-3">Tractor (FK)</th>
+                <th class="px-4 py-3">Dealer (FK)</th>
+                <th class="px-4 py-3">Base Price</th>
+                <th class="px-4 py-3">Subsidy</th>
+                <th class="px-4 py-3">Net Payable</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Financing</th>
+              </tr>
+            </thead>
+            <tbody id="purchasesTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: LOANS & FINANCING -->
+    <section id="tab-loans" class="tab-pane hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <div>
+          <h2 class="font-bold text-base text-slate-900">Agricultural Loan & EMI Portfolio</h2>
+          <p class="text-xs text-slate-500">Loans are linked to the specific Farmer (FK) and their purchased tractor (FK).</p>
+        </div>
+        <button onclick="openAddLoanModal()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+          <i data-lucide="plus" class="w-4 h-4"></i> Apply Loan for Farmer
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3">Loan ID</th>
+                <th class="px-4 py-3">Farmer (FK)</th>
+                <th class="px-4 py-3">Linked Purchase</th>
+                <th class="px-4 py-3">Bank Partner</th>
+                <th class="px-4 py-3">Loan Amount</th>
+                <th class="px-4 py-3">Interest Rate</th>
+                <th class="px-4 py-3">Tenure / EMI</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="loansTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: FARMER 360° DOSSIER INSPECTOR -->
+    <section id="tab-farmer360" class="tab-pane hidden space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="font-bold text-base text-slate-900 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-purple-600"></i>
+            Farmer 360° Relational Profile Inspector
+          </h2>
+          <p class="text-xs text-slate-500">Select any farmer to aggregate their full profile, tractors owned, applied subsidies, and active loan repayment.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-semibold text-slate-600">Select Farmer:</label>
+          <select id="farmer360Selector" onchange="renderFarmer360(this.value)" class="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 font-medium text-slate-800 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+            <!-- Dynamically populated with Farmers -->
+          </select>
+        </div>
+      </div>
+
+      <div id="farmer360Container" class="space-y-6">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Tractor Fleet Flow — Cloud-synchronized Multi-Tenant Agri Platform</div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1 text-emerald-600 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live Cloud Broadcast Active
+        </span>
+        <button onclick="exportDatabaseJSON()" class="hover:text-slate-800 underline">Export Cloud DB</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================== MODALS ======================== -->
+
+  <!-- 1. LOGIN / ROLE SWITCHER MODAL -->
+  <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mx-auto mb-3 shadow-md shadow-emerald-600/30">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">Select Portal Login</h3>
+        <p class="text-xs text-slate-500 mt-1">Choose your identity to access role-specific workflows and regional data</p>
+      </div>
+
+      <!-- Role Tabs in Modal -->
+      <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl mb-5 text-xs font-semibold">
+        <button onclick="setLoginRoleTab('admin')" id="loginTab-admin" class="py-2 rounded-lg bg-white text-slate-900 shadow-sm transition">
+          Admin
+        </button>
+        <button onclick="setLoginRoleTab('dealer')" id="loginTab-dealer" class="py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">
+          Dealer
+        </button>
+        <button onclick="setLoginRoleTab('farmer')" id="loginTab-farmer" class="py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">
+          Farmer
+        </button>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="loginForm-admin" class="space-y-4">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
+          <p class="font-bold text-slate-800 mb-1">Central Admin Access</p>
+          Full nationwide clearance to configure dealers, schemes, manage all fleet records, and view central dashboards.
+        </div>
+        <button onclick="executeLogin('admin', 'admin', 'System Administrator', 'ALL')" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow transition">
+          Login as Master Admin
+        </button>
+      </div>
+
+      <!-- Dealer Login Form -->
+      <div id="loginForm-dealer" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Dealership / Region:</label>
+          <select id="loginDealerSelect" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <p class="text-[11px] text-slate-500">Dealers only view and submit tractor sales & inventory for their specific assigned region.</p>
+        <button onclick="executeDealerLogin()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition">
+          Login to Dealer Portal
+        </button>
+      </div>
+
+      <!-- Farmer Login Form -->
+      <div id="loginForm-farmer" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Registered Farmer:</label>
+          <select id="loginFarmerSelect" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <p class="text-[11px] text-slate-500">Farmers view their personal dashboard: owned tractors, applied subsidies, and active loan schedules.</p>
+        <button onclick="executeFarmerLogin()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow transition">
+          Login to Farmer Portal
+        </button>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+        <button onclick="closeModal('loginModal')" class="text-xs text-slate-400 hover:text-slate-600 font-medium">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ADD FARMER MODAL -->
+  <div id="addFarmerModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Register New Farmer</h3>
+            <p class="text-[11px] text-slate-500">Primary Entity with Auto-Generated Foreign Key</p>
+          </div>
+        </div>
+        <button onclick="closeModal('addFarmerModal')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreateFarmer(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+          <input type="text" id="farmerNameInput" required placeholder="e.g. Balwinder Singh" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+            <input type="tel" id="farmerPhoneInput" required placeholder="e.g. +91 98765 43210" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Region</label>
+            <select id="farmerRegionInput" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none font-medium">
+              <option value="North">North (Punjab, Haryana)</option>
+              <option value="West">West (Maharashtra, Gujarat)</option>
+              <option value="Central">Central (Madhya Pradesh)</option>
+              <option value="South">South (Karnataka, AP)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Land Size (Acres)</label>
+            <input type="number" step="0.1" id="farmerLandInput" required placeholder="e.g. 8.5" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Aadhaar / ID Last 4</label>
+            <input type="text" maxlength="4" id="farmerAadhaarInput" required placeholder="e.g. 7890" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-[11px] text-emerald-800">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 inline mr-1"></i>
+          Once registered, this Farmer will instantly be available in the dropdown for Tractor Purchases, Scheme Grants, and Loans.
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('addFarmerModal')" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow transition">
+            Save Farmer & Sync
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. ADD PURCHASE (RELATIONAL MODAL) -->
+  <div id="addPurchaseModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Record Interlinked Tractor Purchase</h3>
+            <p class="text-[11px] text-slate-500">Connects Farmer (FK) + Tractor (FK) + Dealer (FK) + Scheme (FK)</p>
+          </div>
+        </div>
+        <button onclick="closeModal('addPurchaseModal')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreatePurchase(event)" class="space-y-3">
+        <!-- 1. Select Farmer (FK) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+            <span>1. Select Farmer (Foreign Key):</span>
+            <span class="text-[10px] text-emerald-600 font-bold">Auto-fills Region</span>
+          </label>
+          <select id="purchaseFarmerSelect" onchange="onPurchaseFarmerChanged(this.value)" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <!-- 2. Select Tractor (FK) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">2. Select Tractor Machinery (Foreign Key):</label>
+          <select id="purchaseTractorSelect" onchange="calculatePurchasePricing()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <!-- 3. Dealer & Scheme Selection -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">3. Fulfilling Dealer (FK):</label>
+            <select id="purchaseDealerSelect" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <!-- Populated via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">4. Subsidy Scheme (Optional FK):</label>
+            <select id="purchaseSchemeSelect" onchange="calculatePurchasePricing()" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="">No Subsidy Scheme</option>
+              <!-- Populated via JS -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Pricing Summary Box -->
+        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-1.5 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Tractor Base Price:</span>
+            <span class="font-bold text-slate-800" id="summaryBasePrice">₹0</span>
+          </div>
+          <div class="flex justify-between text-emerald-600">
+            <span>Government Subsidy Benefit:</span>
+            <span class="font-bold" id="summarySubsidyAmount">- ₹0</span>
+          </div>
+          <div class="border-t border-slate-200 pt-1.5 flex justify-between font-bold text-slate-900 text-sm">
+            <span>Net Payable by Farmer:</span>
+            <span class="text-blue-700" id="summaryNetPayable">₹0</span>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('addPurchaseModal')" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow transition">
+            Confirm Purchase & Update Cloud
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ADD LOAN MODAL -->
+  <div id="addLoanModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+            <i data-lucide="landmark" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Apply Agricultural Loan</h3>
+            <p class="text-[11px] text-slate-500">Foreign Key attachment to Farmer & Purchase</p>
+          </div>
+        </div>
+        <button onclick="closeModal('addLoanModal')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreateLoan(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Farmer (FK):</label>
+          <select id="loanFarmerSelect" onchange="onLoanFarmerChanged(this.value)" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Linked Purchase (FK):</label>
+          <select id="loanPurchaseSelect" onchange="onLoanPurchaseSelected(this.value)" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <!-- Dynamically populated with that farmer's purchases -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Financing Bank</label>
+            <input type="text" id="loanBankInput" required value="State Bank of India (Agri Division)" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Loan Amount (₹)</label>
+            <input type="number" id="loanAmountInput" onkeyup="recalculateEMI()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-800">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Interest Rate (% p.a.)</label>
+            <input type="number" step="0.1" id="loanInterestInput" onkeyup="recalculateEMI()" value="7.5" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tenure (Months)</label>
+            <select id="loanTenureSelect" onchange="recalculateEMI()" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+              <option value="36">36 Months (3 Yrs)</option>
+              <option value="60" selected>60 Months (5 Yrs)</option>
+              <option value="84">84 Months (7 Yrs)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calculated EMI Box -->
+        <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 flex items-center justify-between text-xs">
+          <div>
+            <span class="text-purple-700 font-semibold">Estimated Monthly EMI:</span>
+            <div class="text-[10px] text-purple-600">Direct debit to farmer account</div>
+          </div>
+          <span class="text-base font-bold text-purple-900" id="calculatedEmiText">₹0 / mo</span>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('addLoanModal')" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow transition">
+            Submit Loan Application
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. ADD TRACTOR MODAL -->
+  <div id="addTractorModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-slate-900">Add Tractor to Fleet Inventory</h3>
+        <button onclick="closeModal('addTractorModal')" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreateTractor(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Brand & Model Name</label>
+          <input type="text" id="tractorModelInput" required placeholder="e.g. Mahindra 575 DI SP Plus" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Horse Power (HP)</label>
+            <input type="number" id="tractorHpInput" required placeholder="e.g. 47" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Price (₹ INR)</label>
+            <input type="number" id="tractorPriceInput" required placeholder="e.g. 720000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Stocked by Dealer (FK):</label>
+          <select id="tractorDealerSelect" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('addTractorModal')" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow transition">
+            Save Tractor
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT STATE & RELATIONAL CONTROLLER -->
+  <script>
+    // ==========================================
+    // SEED RELATIONAL DATA (INITIAL STATE)
+    // ==========================================
+    const INITIAL_DATA = {
+      farmers: [
+        { id: "FARM-001", name: "Balwinder Singh", phone: "+91 98140 12345", region: "North", landSize: 12.5, aadhaar: "4521", createdAt: "2026-10-15" },
+        { id: "FARM-002", name: "Rameshwar Patil", phone: "+91 94220 67890", region: "West", landSize: 8.0, aadhaar: "8823", createdAt: "2026-10-18" },
+        { id: "FARM-003", name: "Shivraj Chouhan", phone: "+91 97550 11223", region: "Central", landSize: 15.0, aadhaar: "1945", createdAt: "2026-10-22" },
+        { id: "FARM-004", name: "Venkata Reddy", phone: "+91 98480 33445", region: "South", landSize: 6.5, aadhaar: "6712", createdAt: "2026-10-25" }
+      ],
+      dealers: [
+        { id: "DLR-001", name: "Punjab Agro Tractors", contact: "Gurpreet Singh", phone: "+91 98720 00111", region: "North", address: "GT Road, Ludhiana" },
+        { id: "DLR-002", name: "Maharashtra Kisan Hub", contact: "Nitin Deshmukh", phone: "+91 98230 00222", region: "West", address: "MIDC, Pune" },
+        { id: "DLR-003", name: "Malwa Fleet & Machinery", contact: "Anurag Sharma", phone: "+91 94250 00333", region: "Central", address: "AB Road, Indore" },
+        { id: "DLR-004", name: "Deccan Tractor World", contact: "K. R. Murthy", phone: "+91 98490 00444", region: "South", address: "Guntur Highway, Vijayawada" }
+      ],
+      tractors: [
+        { id: "TRAC-001", model: "Mahindra 575 DI SP Plus", hp: 47, price: 720000, dealerId: "DLR-001", status: "Sold" },
+        { id: "TRAC-002", model: "John Deere 5050D", hp: 50, price: 840000, dealerId: "DLR-002", status: "Sold" },
+        { id: "TRAC-003", model: "Swaraj 744 FE", hp: 48, price: 750000, dealerId: "DLR-003", status: "Sold" },
+        { id: "TRAC-004", model: "Sonalika Tiger DI 50", hp: 52, price: 790000, dealerId: "DLR-001", status: "Available" },
+        { id: "TRAC-005", model: "Eicher 551 Super Plus", hp: 50, price: 690000, dealerId: "DLR-004", status: "Available" },
+        { id: "TRAC-006", model: "New Holland 3630 TX", hp: 55, price: 920000, dealerId: "DLR-002", status: "Available" }
+      ],
+      schemes: [
+        { id: "SCH-001", name: "PM Kisan Tractor Subsidy 2026", subsidyPct: 20, maxCap: 150000, desc: "Central Govt scheme for small & marginal farm mechanization" },
+        { id: "SCH-002", name: "State Farm Mechanization Grant", subsidyPct: 25, maxCap: 200000, desc: "State specific rebate on high HP green fuel tractors" },
+        { id: "SCH-003", name: "Women Farmer Mechanization Incentive", subsidyPct: 30, maxCap: 250000, desc: "Special incentive for women-led agricultural land holdings" }
+      ],
+      purchases: [
+        {
+          id: "PUR-101",
+          farmerId: "FARM-001",
+          tractorId: "TRAC-001",
+          dealerId: "DLR-001",
+          schemeId: "SCH-001",
+          date: "2026-10-19",
+          basePrice: 720000,
+          subsidyAmount: 144000,
+          netPayable: 576000,
+          status: "Financed"
+        },
+        {
+          id: "PUR-102",
+          farmerId: "FARM-002",
+          tractorId: "TRAC-002",
+          dealerId: "DLR-002",
+          schemeId: "SCH-002",
+          date: "2026-10-21",
+          basePrice: 840000,
+          subsidyAmount: 200000,
+          netPayable: 640000,
+          status: "Financed"
+        },
+        {
+          id: "PUR-103",
+          farmerId: "FARM-003",
+          tractorId: "TRAC-003",
+          dealerId: "DLR-003",
+          schemeId: "",
+          date: "2026-10-26",
+          basePrice: 750000,
+          subsidyAmount: 0,
+          netPayable: 750000,
+          status: "Completed"
+        }
+      ],
+      loans: [
+        {
+          id: "LN-201",
+          farmerId: "FARM-001",
+          purchaseId: "PUR-101",
+          bank: "State Bank of India (Agri)",
+          amount: 500000,
+          interestRate: 7.5,
+          tenureMonths: 60,
+          emi: 10019,
+          status: "Disbursed"
+        },
+        {
+          id: "LN-202",
+          farmerId: "FARM-002",
+          purchaseId: "PUR-102",
+          bank: "Bank of Baroda (Kisan Finance)",
+          amount: 550000,
+          interestRate: 7.8,
+          tenureMonths: 60,
+          emi: 11105,
+          status: "Approved"
+        }
+      ],
+      activities: [
+        { id: 1, text: "Purchased Mahindra 575 DI by Balwinder Singh (FARM-001) under PM Kisan Subsidy", time: "10 mins ago", type: "purchase" },
+        { id: 2, text: "Loan ₹5.5 Lakh approved by Bank of Baroda for Rameshwar Patil (FARM-002)", time: "25 mins ago", type: "loan" },
+        { id: 3, text: "New Farmer Venkata Reddy registered in South Region", time: "1 hour ago", type: "farmer" }
+      ]
+    };
+
+    // ==========================================
+    // PERSISTENCE & REAL-TIME BROADCAST ENGINE
+    // ==========================================
+    const STORAGE_KEY = "tractor_fleet_db_v2";
+    const broadcastChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('tractor_fleet_sync') : null;
+
+    let DB = loadDB();
+
+    function loadDB() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error("Error parsing stored DB:", e);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DATA));
+      return JSON.parse(JSON.stringify(INITIAL_DATA));
+    }
+
+    function saveDB(recordActivity = null) {
+      if (recordActivity) {
+        DB.activities.unshift({
+          id: Date.now(),
+          text: recordActivity,
+          time: "Just now",
+          type: "action"
+        });
+        if (DB.activities.length > 20) DB.activities.pop();
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+      
+      // Ping other tabs/clients in real time
+      if (broadcastChannel) {
+        broadcastChannel.postMessage({ type: 'DATA_UPDATED', timestamp: Date.now() });
+      }
+      renderAll();
+    }
+
+    if (broadcastChannel) {
+      broadcastChannel.onmessage = (event) => {
+        if (event.data?.type === 'DATA_UPDATED') {
+          DB = loadDB();
+          renderAll();
+          showCloudToast("Cloud sync received: Dashboard refreshed with latest updates!");
+        }
+      };
+    }
+
+    // ==========================================
+    // AUTHENTICATION & ROLE STATE
+    // ==========================================
+    let currentUser = {
+      role: 'admin', // 'admin' | 'dealer' | 'farmer'
+      id: 'admin',
+      name: 'System Administrator',
+      region: 'ALL'
+    };
+
+    function executeLogin(role, id, name, region) {
+      currentUser = { role, id, name, region };
+      closeModal('loginModal');
+      updateAuthUI();
+      renderAll();
+      showCloudToast(`Switched login to ${name} (${role.toUpperCase()})`);
+    }
+
+    function executeDealerLogin() {
+      const dealerId = document.getElementById('loginDealerSelect').value;
+      const dealer = DB.dealers.find(d => d.id === dealerId);
+      if (dealer) {
+        executeLogin('dealer', dealer.id, dealer.name, dealer.region);
+      }
+    }
+
+    function executeFarmerLogin() {
+      const farmerId = document.getElementById('loginFarmerSelect').value;
+      const farmer = DB.farmers.find(f => f.id === farmerId);
+      if (farmer) {
+        executeLogin('farmer', farmer.id, farmer.name, farmer.region);
+        // Switch to farmer 360 tab
+        switchTab('farmer360');
+      }
+    }
+
+    function updateAuthUI() {
+      const avatar = document.getElementById('userAvatar');
+      const nameText = document.getElementById('userNameText');
+      const roleText = document.getElementById('userRoleText');
+      const regionBadge = document.getElementById('activeRegionBadge');
+      const roleScopeNotice = document.getElementById('roleScopeNoticeText');
+
+      nameText.textContent = currentUser.name;
+      roleText.textContent = `${currentUser.role} role`;
+      avatar.textContent = currentUser.name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
+
+      if (currentUser.role === 'admin') {
+        regionBadge.textContent = "Region: All (National)";
+        roleScopeNotice.innerHTML = `Logged in as <b>Master Administrator</b>. Full clearance across all regions and tables.`;
+      } else if (currentUser.role === 'dealer') {
+        regionBadge.textContent = `Region: ${currentUser.region}`;
+        roleScopeNotice.innerHTML = `Logged in as Dealer <b>${currentUser.name}</b>. All records submitted will be tagged to <b>${currentUser.region} Region</b>.`;
+      } else if (currentUser.role === 'farmer') {
+        regionBadge.textContent = `Farmer ID: ${currentUser.id} (${currentUser.region})`;
+        roleScopeNotice.innerHTML = `Logged in as Farmer <b>${currentUser.name}</b>. Viewing your personal tractors, subsidies, and loans.`;
+      }
+    }
+
+    // ==========================================
+    // UI NAVIGATION TABS
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        el.classList.remove('active-tab', 'text-emerald-700', 'bg-emerald-100/70', 'font-bold');
+        el.classList.add('text-slate-600', 'font-semibold');
+      });
+
+      const activeBtn = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600', 'font-semibold');
+        activeBtn.classList.add('active-tab', 'text-emerald-700', 'bg-emerald-100/70', 'font-bold');
+      }
+
+      const activePane = document.getElementById(`tab-${tabId}`);
+      if (activePane) {
+        activePane.classList.remove('hidden');
+      }
+
+      if (tabId === 'farmer360') {
+        const select = document.getElementById('farmer360Selector');
+        if (currentUser.role === 'farmer') {
+          select.value = currentUser.id;
+          renderFarmer360(currentUser.id);
+        } else if (select.value) {
+          renderFarmer360(select.value);
+        } else if (DB.farmers.length > 0) {
+          select.value = DB.farmers[0].id;
+          renderFarmer360(DB.farmers[0].id);
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // RENDER FUNCTIONS (CONNECTED RELATIONAL VIEWS)
+    // ==========================================
+    function renderAll() {
+      renderDashboard();
+      renderFarmers();
+      renderTractors();
+      renderDealers();
+      renderSchemes();
+      renderPurchases();
+      renderLoans();
+      populateDropdowns();
+      lucide.createIcons();
+    }
+
+    // 1. Dashboard
+    function renderDashboard() {
+      const selectedRegion = document.getElementById('dashboardRegionFilter').value;
+
+      const filteredFarmers = selectedRegion === 'ALL' ? DB.farmers : DB.farmers.filter(f => f.region === selectedRegion);
+      const filteredPurchases = selectedRegion === 'ALL' ? DB.purchases : DB.purchases.filter(p => {
+        const f = DB.farmers.find(farmer => farmer.id === p.farmerId);
+        return f && f.region === selectedRegion;
+      });
+
+      document.getElementById('kpiFarmers').textContent = filteredFarmers.length;
+      document.getElementById('kpiTractors').textContent = DB.tractors.length;
+      const soldCount = DB.tractors.filter(t => t.status === 'Sold').length;
+      const availCount = DB.tractors.filter(t => t.status === 'Available').length;
+      document.getElementById('kpiTractorsSub').textContent = `${availCount} Available / ${soldCount} Sold`;
+
+      const totalSales = filteredPurchases.reduce((acc, p) => acc + p.netPayable, 0);
+      document.getElementById('kpiSalesVolume').textContent = `₹${(totalSales / 100000).toFixed(2)} Lakh`;
+      document.getElementById('kpiPurchasesCount').textContent = `${filteredPurchases.length} Purchases logged`;
+
+      const totalLoans = DB.loans.reduce((acc, l) => acc + l.amount, 0);
+      document.getElementById('kpiLoansVolume').textContent = `₹${(totalLoans / 100000).toFixed(2)} Lakh`;
+      const totalSubsidy = DB.purchases.reduce((acc, p) => acc + (p.subsidyAmount || 0), 0);
+      document.getElementById('kpiSubsidiesVolume').textContent = `₹${(totalSubsidy / 100000).toFixed(2)} Lakh Subsidies`;
+
+      // Regional Distribution breakdown
+      const regions = ["North", "West", "Central", "South"];
+      const distList = document.getElementById('regionalDistributionList');
+      distList.innerHTML = regions.map(reg => {
+        const regFarmers = DB.farmers.filter(f => f.region === reg).length;
+        const regPurchases = DB.purchases.filter(p => {
+          const f = DB.farmers.find(farm => farm.id === p.farmerId);
+          return f && f.region === reg;
+        }).length;
+        const pct = DB.farmers.length ? Math.round((regFarmers / DB.farmers.length) * 100) : 0;
+        return `
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>${reg} Region</span>
+              <span>${regFarmers} Farmers • ${regPurchases} Tractors</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-emerald-500 h-2 rounded-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Live Activity Stream
+      const activityFeed = document.getElementById('liveActivityFeed');
+      activityFeed.innerHTML = DB.activities.map(act => `
+        <div class="flex items-start gap-2.5 text-xs pb-2 border-b border-slate-100 last:border-0">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0"></div>
+          <div>
+            <p class="text-slate-800 leading-snug font-medium">${act.text}</p>
+            <span class="text-[10px] text-slate-400">${act.time}</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Recent Purchases Table on Dashboard
+      const purchasesBody = document.getElementById('dashboardPurchasesBody');
+      purchasesBody.innerHTML = filteredPurchases.map(p => {
+        const farmer = DB.farmers.find(f => f.id === p.farmerId) || { name: 'Unknown', region: '-' };
+        const tractor = DB.tractors.find(t => t.id === p.tractorId) || { model: 'Unknown' };
+        const dealer = DB.dealers.find(d => d.id === p.dealerId) || { name: 'Direct' };
+        const scheme = DB.schemes.find(s => s.id === p.schemeId);
+        const loan = DB.loans.find(l => l.purchaseId === p.id);
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-mono font-bold text-slate-900">${p.id}</td>
+            <td class="px-4 py-3">
+              <button onclick="inspectFarmer('${p.farmerId}')" class="font-bold text-emerald-700 hover:underline flex items-center gap-1">
+                ${farmer.name} <span class="text-[10px] font-normal text-slate-400">(${p.farmerId})</span>
+              </button>
+              <div class="text-[10px] text-slate-400">${farmer.region} Region</div>
+            </td>
+            <td class="px-4 py-3 font-semibold text-slate-800">${tractor.model}</td>
+            <td class="px-4 py-3 text-slate-600">${dealer.name}</td>
+            <td class="px-4 py-3">
+              ${scheme ? `<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold">${scheme.name.substring(0, 18)}... (-₹${p.subsidyAmount})</span>` : `<span class="text-slate-400 text-[10px]">None</span>`}
+            </td>
+            <td class="px-4 py-3 font-bold text-slate-900">₹${p.netPayable.toLocaleString()}</td>
+            <td class="px-4 py-3">
+              ${loan ? `<span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold">₹${loan.amount.toLocaleString()} (${loan.status})</span>` : `<span class="text-slate-400 text-[10px]">Self Funded</span>`}
+            </td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="inspectFarmer('${p.farmerId}')" class="text-xs text-purple-600 hover:text-purple-800 font-bold">
+                View 360°
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 2. Farmers Table
+    function renderFarmers() {
+      const search = (document.getElementById('searchFarmersInput')?.value || '').toLowerCase();
+      const body = document.getElementById('farmersTableBody');
+      
+      const filtered = DB.farmers.filter(f => 
+        f.name.toLowerCase().includes(search) || 
+        f.id.toLowerCase().includes(search) || 
+        f.region.toLowerCase().includes(search)
+      );
+
+      body.innerHTML = filtered.map(f => {
+        const ownedTractors = DB.purchases.filter(p => p.farmerId === f.id);
+        const loans = DB.loans.filter(l => l.farmerId === f.id);
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-mono font-bold text-emerald-800">${f.id}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">${f.name}</td>
+            <td class="px-4 py-3 font-mono text-slate-600">${f.phone}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-bold">${f.region}</span>
+            </td>
+            <td class="px-4 py-3 font-medium text-slate-700">${f.landSize} Acres</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-full ${ownedTractors.length > 0 ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-500'} font-bold text-[10px]">
+                ${ownedTractors.length} Tractor(s)
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-full ${loans.length > 0 ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-500'} font-bold text-[10px]">
+                ${loans.length} Loan(s)
+              </span>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="inspectFarmer('${f.id}')" class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 font-bold text-[11px] transition">
+                Open 360°
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 3. Tractors Grid
+    function renderTractors() {
+      const grid = document.getElementById('tractorsGrid');
+      grid.innerHTML = DB.tractors.map(t => {
+        const dealer = DB.dealers.find(d => d.id === t.dealerId) || { name: 'Unassigned', region: 'General' };
+        const isSold = t.status === 'Sold';
+
+        return `
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-mono text-xs font-bold text-slate-400">${t.id}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${isSold ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}">
+                  ${t.status}
+                </span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm mb-1">${t.model}</h4>
+              <div class="flex items-center gap-2 text-xs text-slate-500 mb-3">
+                <span class="font-semibold text-slate-700">${t.hp} HP Engine</span>
+                <span>•</span>
+                <span>Stocked by ${dealer.name}</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-3 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block uppercase font-semibold">Ex-Showroom Price</span>
+                <span class="text-sm font-bold text-slate-900">₹${t.price.toLocaleString()}</span>
+              </div>
+              ${!isSold ? `
+                <button onclick="startPurchaseForTractor('${t.id}')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition">
+                  Buy / Allocate
+                </button>
+              ` : `
+                <span class="text-xs text-slate-400 font-semibold italic">Allocated to Farmer</span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4. Dealers Table
+    function renderDealers() {
+      const body = document.getElementById('dealersTableBody');
+      body.innerHTML = DB.dealers.map(d => {
+        const inventory = DB.tractors.filter(t => t.dealerId === d.id).length;
+        const sales = DB.purchases.filter(p => p.dealerId === d.id).length;
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-mono font-bold text-slate-800">${d.id}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">${d.name}</td>
+            <td class="px-4 py-3 text-slate-700">${d.contact}</td>
+            <td class="px-4 py-3 font-mono text-slate-600">${d.phone}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-bold">${d.region}</span>
+            </td>
+            <td class="px-4 py-3 font-semibold text-slate-700">${inventory} Tractors</td>
+            <td class="px-4 py-3 font-bold text-emerald-700">${sales} Sold</td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="executeLogin('dealer', '${d.id}', '${d.name}', '${d.region}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-[11px] transition">
+                Switch as Dealer
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 5. Schemes Grid
+    function renderSchemes() {
+      const grid = document.getElementById('schemesGrid');
+      grid.innerHTML = DB.schemes.map(s => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-mono text-xs font-bold text-slate-400">${s.id}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+                ${s.subsidyPct}% Subsidy
+              </span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">${s.name}</h4>
+            <p class="text-xs text-slate-500 mb-3">${s.desc}</p>
+          </div>
+          <div class="border-t border-slate-100 pt-3 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-slate-400 block uppercase font-semibold">Max Cap</span>
+              <span class="text-sm font-bold text-emerald-700">₹${s.maxCap.toLocaleString()}</span>
+            </div>
+            <button onclick="openAddPurchaseModal()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition">
+              Apply in Purchase
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 6. Purchases Table
+    function renderPurchases() {
+      const body = document.getElementById('purchasesTableBody');
+      body.innerHTML = DB.purchases.map(p => {
+        const farmer = DB.farmers.find(f => f.id === p.farmerId) || { name: 'Unknown' };
+        const tractor = DB.tractors.find(t => t.id === p.tractorId) || { model: 'Unknown' };
+        const dealer = DB.dealers.find(d => d.id === p.dealerId) || { name: 'Unknown' };
+        const loan = DB.loans.find(l => l.purchaseId === p.id);
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-mono font-bold text-slate-900">${p.id}</td>
+            <td class="px-4 py-3 text-slate-600">${p.date}</td>
+            <td class="px-4 py-3 font-bold text-emerald-800">
+              <button onclick="inspectFarmer('${p.farmerId}')" class="hover:underline">${farmer.name}</button>
+            </td>
+            <td class="px-4 py-3 font-semibold text-slate-800">${tractor.model}</td>
+            <td class="px-4 py-3 text-slate-600">${dealer.name}</td>
+            <td class="px-4 py-3 text-slate-500">₹${p.basePrice.toLocaleString()}</td>
+            <td class="px-4 py-3 text-emerald-600 font-bold">- ₹${p.subsidyAmount.toLocaleString()}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">₹${p.netPayable.toLocaleString()}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">${p.status}</span>
+            </td>
+            <td class="px-4 py-3 text-right">
+              ${!loan ? `
+                <button onclick="startLoanForPurchase('${p.id}', '${p.farmerId}', ${p.netPayable})" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] transition">
+                  Apply Loan
+                </button>
+              ` : `
+                <span class="text-xs font-semibold text-purple-700">Loan: ${loan.id}</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 7. Loans Table
+    function renderLoans() {
+      const body = document.getElementById('loansTableBody');
+      body.innerHTML = DB.loans.map(l => {
+        const farmer = DB.farmers.find(f => f.id === l.farmerId) || { name: 'Unknown' };
+        const purchase = DB.purchases.find(p => p.id === l.purchaseId);
+        const tractor = purchase ? DB.tractors.find(t => t.id === purchase.tractorId) : null;
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-mono font-bold text-purple-800">${l.id}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">
+              <button onclick="inspectFarmer('${l.farmerId}')" class="hover:underline text-emerald-800">${farmer.name}</button>
+            </td>
+            <td class="px-4 py-3 text-slate-700 font-medium">
+              ${tractor ? tractor.model : l.purchaseId}
+            </td>
+            <td class="px-4 py-3 text-slate-600">${l.bank}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">₹${l.amount.toLocaleString()}</td>
+            <td class="px-4 py-3 text-slate-700 font-semibold">${l.interestRate}%</td>
+            <td class="px-4 py-3">
+              <div class="font-bold text-purple-700">₹${l.emi.toLocaleString()} / mo</div>
+              <div class="text-[10px] text-slate-400">${l.tenureMonths} Months</div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-full ${l.status === 'Disbursed' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'} text-[10px] font-bold">
+                ${l.status}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-right">
+              ${l.status !== 'Disbursed' ? `
+                <button onclick="disburseLoan('${l.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] transition">
+                  Disburse
+                </button>
+              ` : `
+                <span class="text-xs text-slate-400">Active EMI</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 8. Farmer 360 Dossier
+    function inspectFarmer(farmerId) {
+      document.getElementById('farmer360Selector').value = farmerId;
+      switchTab('farmer360');
+      renderFarmer360(farmerId);
+    }
+
+    function renderFarmer360(farmerId) {
+      const farmer = DB.farmers.find(f => f.id === farmerId);
+      const container = document.getElementById('farmer360Container');
+      if (!farmer) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400">Select a farmer to view their relational dossier.</div>`;
+        return;
+      }
+
+      const purchases = DB.purchases.filter(p => p.farmerId === farmer.id);
+      const loans = DB.loans.filter(l => l.farmerId === farmer.id);
+
+      container.innerHTML = `
+        <!-- Farmer Dossier Card -->
+        <div class="bg-gradient-to-r from-emerald-800 to-green-900 rounded-3xl p-6 text-white shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center font-bold text-2xl border border-white/20">
+                ${farmer.name.split(" ").map(n => n[0]).join("")}
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl font-bold">${farmer.name}</h2>
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/30 text-xs font-mono font-bold">${farmer.id}</span>
+                </div>
+                <p class="text-emerald-200 text-xs mt-1">Phone: ${farmer.phone} • Aadhaar Last 4: **** ${farmer.aadhaar}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/10 text-center">
+                <span class="text-[10px] uppercase text-emerald-200 block font-semibold">Region</span>
+                <span class="font-bold text-sm">${farmer.region}</span>
+              </div>
+              <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/10 text-center">
+                <span class="text-[10px] uppercase text-emerald-200 block font-semibold">Land Size</span>
+                <span class="font-bold text-sm">${farmer.landSize} Acres</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Column Linked Profile Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Column 1: Tractors Purchased -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="tractor" class="w-4 h-4 text-emerald-600"></i>
+              Tractors Bought (${purchases.length})
+            </h3>
+            ${purchases.length === 0 ? `
+              <p class="text-xs text-slate-400 italic">No tractors purchased yet.</p>
+              <button onclick="startPurchaseForFarmer('${farmer.id}')" class="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl transition">
+                + Allocate Tractor
+              </button>
+            ` : purchases.map(p => {
+              const trac = DB.tractors.find(t => t.id === p.tractorId) || { model: 'Machinery' };
+              const dlr = DB.dealers.find(d => d.id === p.dealerId) || { name: 'Dealer' };
+              return `
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <div class="flex justify-between items-start">
+                    <span class="font-bold text-xs text-slate-900">${trac.model}</span>
+                    <span class="text-[10px] font-mono text-slate-400">${p.id}</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500 mt-1">Purchased via ${dlr.name}</div>
+                  <div class="text-xs font-bold text-emerald-700 mt-2">Net Price: ₹${p.netPayable.toLocaleString()}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Column 2: Government Schemes Applied -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="award" class="w-4 h-4 text-green-600"></i>
+              Schemes & Subsidies Applied
+            </h3>
+            ${purchases.filter(p => p.schemeId).length === 0 ? `
+              <p class="text-xs text-slate-400 italic">No subsidy schemes availed.</p>
+            ` : purchases.filter(p => p.schemeId).map(p => {
+              const sch = DB.schemes.find(s => s.id === p.schemeId);
+              return `
+                <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                  <span class="font-bold text-xs text-slate-900">${sch ? sch.name : p.schemeId}</span>
+                  <div class="text-xs text-emerald-700 font-bold mt-1">Subsidy Received: ₹${p.subsidyAmount.toLocaleString()}</div>
+                  <div class="text-[10px] text-slate-500 mt-0.5">Applied on Purchase ${p.id}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Column 3: Active Loans & Monthly EMI -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="landmark" class="w-4 h-4 text-purple-600"></i>
+              Active Loans & EMI Schedule
+            </h3>
+            ${loans.length === 0 ? `
+              <p class="text-xs text-slate-400 italic">No loans financed.</p>
+            ` : loans.map(l => `
+              <div class="p-3 bg-purple-50/50 rounded-xl border border-purple-100">
+                <div class="flex justify-between items-start">
+                  <span class="font-bold text-xs text-purple-900">${l.bank}</span>
+                  <span class="px-2 py-0.5 rounded-full bg-purple-200 text-purple-800 text-[10px] font-bold">${l.status}</span>
+                </div>
+                <div class="text-sm font-bold text-slate-900 mt-1">Loan: ₹${l.amount.toLocaleString()}</div>
+                <div class="text-xs font-semibold text-purple-700 mt-1">Monthly EMI: ₹${l.emi.toLocaleString()} (${l.tenureMonths} mos @ ${l.interestRate}%)</div>
+              </div>
+            `).join('')}
+          </div>
+
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // MODALS & ACTIONS
+    // ==========================================
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openLoginModal() {
+      openModal('loginModal');
+    }
+
+    function setLoginRoleTab(role) {
+      ['admin', 'dealer', 'farmer'].forEach(r => {
+        document.getElementById(`loginForm-${r}`).classList.add('hidden');
+        const tab = document.getElementById(`loginTab-${r}`);
+        tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        tab.classList.add('text-slate-600');
+      });
+
+      document.getElementById(`loginForm-${role}`).classList.remove('hidden');
+      const activeTab = document.getElementById(`loginTab-${role}`);
+      activeTab.classList.remove('text-slate-600');
+      activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+    }
+
+    function openAddFarmerModal() {
+      openModal('addFarmerModal');
+    }
+
+    function handleCreateFarmer(e) {
+      e.preventDefault();
+      const name = document.getElementById('farmerNameInput').value;
+      const phone = document.getElementById('farmerPhoneInput').value;
+      const region = document.getElementById('farmerRegionInput').value;
+      const landSize = parseFloat(document.getElementById('farmerLandInput').value);
+      const aadhaar = document.getElementById('farmerAadhaarInput').value;
+
+      const newId = `FARM-${String(DB.farmers.length + 1).padStart(3, '0')}`;
+      const newFarmer = {
+        id: newId,
+        name,
+        phone,
+        region,
+        landSize,
+        aadhaar,
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+
+      DB.farmers.push(newFarmer);
+      saveDB(`Registered Farmer ${name} (${newId}) in ${region} Region`);
+      closeModal('addFarmerModal');
+      e.target.reset();
+      showCloudToast(`Farmer ${newId} created! Now available across all tables.`);
+    }
+
+    function openAddPurchaseModal() {
+      populateDropdowns();
+      calculatePurchasePricing();
+      openModal('addPurchaseModal');
+    }
+
+    function startPurchaseForTractor(tractorId) {
+      openAddPurchaseModal();
+      document.getElementById('purchaseTractorSelect').value = tractorId;
+      calculatePurchasePricing();
+    }
+
+    function startPurchaseForFarmer(farmerId) {
+      openAddPurchaseModal();
+      document.getElementById('purchaseFarmerSelect').value = farmerId;
+      onPurchaseFarmerChanged(farmerId);
+    }
+
+    function onPurchaseFarmerChanged(farmerId) {
+      const farmer = DB.farmers.find(f => f.id === farmerId);
+      if (farmer && currentUser.role !== 'dealer') {
+        const dealerInRegion = DB.dealers.find(d => d.region === farmer.region);
+        if (dealerInRegion) {
+          document.getElementById('purchaseDealerSelect').value = dealerInRegion.id;
+        }
+      }
+      calculatePurchasePricing();
+    }
+
+    function calculatePurchasePricing() {
+      const tractorId = document.getElementById('purchaseTractorSelect')?.value;
+      const schemeId = document.getElementById('purchaseSchemeSelect')?.value;
+
+      const tractor = DB.tractors.find(t => t.id === tractorId);
+      const scheme = DB.schemes.find(s => s.id === schemeId);
+
+      const basePrice = tractor ? tractor.price : 0;
+      let subsidy = 0;
+      if (scheme && basePrice > 0) {
+        subsidy = Math.min((basePrice * scheme.subsidyPct) / 100, scheme.maxCap);
+      }
+      const net = Math.max(0, basePrice - subsidy);
+
+      const baseElem = document.getElementById('summaryBasePrice');
+      const subElem = document.getElementById('summarySubsidyAmount');
+      const netElem = document.getElementById('summaryNetPayable');
+
+      if (baseElem) baseElem.textContent = `₹${basePrice.toLocaleString()}`;
+      if (subElem) subElem.textContent = `- ₹${subsidy.toLocaleString()}`;
+      if (netElem) netElem.textContent = `₹${net.toLocaleString()}`;
+
+      return { basePrice, subsidy, net };
+    }
+
+    function handleCreatePurchase(e) {
+      e.preventDefault();
+      const farmerId = document.getElementById('purchaseFarmerSelect').value;
+      const tractorId = document.getElementById('purchaseTractorSelect').value;
+      const dealerId = document.getElementById('purchaseDealerSelect').value;
+      const schemeId = document.getElementById('purchaseSchemeSelect').value;
+
+      const pricing = calculatePurchasePricing();
+
+      const newId = `PUR-${String(DB.purchases.length + 101)}`;
+      const newPurchase = {
+        id: newId,
+        farmerId,
+        tractorId,
+        dealerId,
+        schemeId,
+        date: new Date().toISOString().split('T')[0],
+        basePrice: pricing.basePrice,
+        subsidyAmount: pricing.subsidy,
+        netPayable: pricing.net,
+        status: "Completed"
+      };
+
+      // Mark tractor as sold
+      const tractor = DB.tractors.find(t => t.id === tractorId);
+      if (tractor) tractor.status = "Sold";
+
+      DB.purchases.push(newPurchase);
+      const farmer = DB.farmers.find(f => f.id === farmerId);
+      saveDB(`Purchase ${newId} logged: ${farmer?.name} bought ${tractor?.model}`);
+      closeModal('addPurchaseModal');
+      showCloudToast(`Purchase ${newId} recorded and synchronized to cloud!`);
+    }
+
+    function openAddLoanModal() {
+      populateDropdowns();
+      openModal('addLoanModal');
+    }
+
+    function startLoanForPurchase(purchaseId, farmerId, netPayable) {
+      openAddLoanModal();
+      document.getElementById('loanFarmerSelect').value = farmerId;
+      onLoanFarmerChanged(farmerId);
+      document.getElementById('loanPurchaseSelect').value = purchaseId;
+      document.getElementById('loanAmountInput').value = Math.round(netPayable * 0.8);
+      recalculateEMI();
+    }
+
+    function onLoanFarmerChanged(farmerId) {
+      const select = document.getElementById('loanPurchaseSelect');
+      const purchases = DB.purchases.filter(p => p.farmerId === farmerId);
+      if (purchases.length === 0) {
+        select.innerHTML = `<option value="">No purchases found for this farmer</option>`;
+      } else {
+        select.innerHTML = purchases.map(p => {
+          const t = DB.tractors.find(trac => trac.id === p.tractorId);
+          return `<option value="${p.id}">${p.id} - ${t?.model || 'Tractor'} (Net: ₹${p.netPayable.toLocaleString()})</option>`;
+        }).join('');
+        onLoanPurchaseSelected(purchases[0].id);
+      }
+    }
+
+    function onLoanPurchaseSelected(purchaseId) {
+      const purchase = DB.purchases.find(p => p.id === purchaseId);
+      if (purchase) {
+        document.getElementById('loanAmountInput').value = Math.round(purchase.netPayable * 0.8);
+        recalculateEMI();
+      }
+    }
+
+    function recalculateEMI() {
+      const p = parseFloat(document.getElementById('loanAmountInput').value) || 0;
+      const r = (parseFloat(document.getElementById('loanInterestInput').value) || 7.5) / 12 / 100;
+      const n = parseInt(document.getElementById('loanTenureSelect').value) || 60;
+
+      let emi = 0;
+      if (p > 0 && r > 0 && n > 0) {
+        emi = Math.round((p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+      }
+
+      document.getElementById('calculatedEmiText').textContent = `₹${emi.toLocaleString()} / mo`;
+      return emi;
+    }
+
+    function handleCreateLoan(e) {
+      e.preventDefault();
+      const farmerId = document.getElementById('loanFarmerSelect').value;
+      const purchaseId = document.getElementById('loanPurchaseSelect').value;
+      const bank = document.getElementById('loanBankInput').value;
+      const amount = parseFloat(document.getElementById('loanAmountInput').value);
+      const interestRate = parseFloat(document.getElementById('loanInterestInput').value);
+      const tenureMonths = parseInt(document.getElementById('loanTenureSelect').value);
+      const emi = recalculateEMI();
+
+      const newId = `LN-${String(DB.loans.length + 201)}`;
+      const newLoan = {
+        id: newId,
+        farmerId,
+        purchaseId,
+        bank,
+        amount,
+        interestRate,
+        tenureMonths,
+        emi,
+        status: "Approved"
+      };
+
+      DB.loans.push(newLoan);
+      const farmer = DB.farmers.find(f => f.id === farmerId);
+      saveDB(`Loan ${newId} approved for ${farmer?.name}: ₹${amount.toLocaleString()} by ${bank}`);
+      closeModal('addLoanModal');
+      showCloudToast(`Loan application ${newId} approved!`);
+    }
+
+    function disburseLoan(loanId) {
+      const loan = DB.loans.find(l => l.id === loanId);
+      if (loan) {
+        loan.status = "Disbursed";
+        const farmer = DB.farmers.find(f => f.id === loan.farmerId);
+        saveDB(`Loan ${loan.id} disbursed to ${farmer?.name}'s account`);
+        showCloudToast(`Loan ${loan.id} marked as Disbursed!`);
+      }
+    }
+
+    function openAddTractorModal() {
+      populateDropdowns();
+      openModal('addTractorModal');
+    }
+
+    function handleCreateTractor(e) {
+      e.preventDefault();
+      const model = document.getElementById('tractorModelInput').value;
+      const hp = parseInt(document.getElementById('tractorHpInput').value);
+      const price = parseFloat(document.getElementById('tractorPriceInput').value);
+      const dealerId = document.getElementById('tractorDealerSelect').value;
+
+      const newId = `TRAC-${String(DB.tractors.length + 1).padStart(3, '0')}`;
+      DB.tractors.push({
+        id: newId,
+        model,
+        hp,
+        price,
+        dealerId,
+        status: "Available"
+      });
+
+      saveDB(`New tractor ${model} (${newId}) added to fleet inventory`);
+      closeModal('addTractorModal');
+      showCloudToast(`Tractor ${newId} added to stock!`);
+    }
+
+    // ==========================================
+    // POPULATE DYNAMIC DROPDOWNS
+    // ==========================================
+    function populateDropdowns() {
+      // 1. Dealer login select
+      const loginDealer = document.getElementById('loginDealerSelect');
+      if (loginDealer) {
+        loginDealer.innerHTML = DB.dealers.map(d => `<option value="${d.id}">${d.name} (${d.region} Region)</option>`).join('');
+      }
+
+      // 2. Farmer login select
+      const loginFarmer = document.getElementById('loginFarmerSelect');
+      if (loginFarmer) {
+        loginFarmer.innerHTML = DB.farmers.map(f => `<option value="${f.id}">${f.name} - ${f.id} (${f.region})</option>`).join('');
+      }
+
+      // 3. Farmer 360 select
+      const f360 = document.getElementById('farmer360Selector');
+      if (f360) {
+        const currentVal = f360.value;
+        f360.innerHTML = DB.farmers.map(f => `<option value="${f.id}">${f.name} (${f.id}) - ${f.region}</option>`).join('');
+        if (currentVal && DB.farmers.some(f => f.id === currentVal)) {
+          f360.value = currentVal;
+        }
+      }
+
+      // 4. Purchase Farmer Select
+      const pFarmer = document.getElementById('purchaseFarmerSelect');
+      if (pFarmer) {
+        pFarmer.innerHTML = DB.farmers.map(f => `<option value="${f.id}">${f.name} (${f.id}) - ${f.region} [${f.landSize} Acres]</option>`).join('');
+      }
+
+      // 5. Purchase Tractor Select
+      const pTractor = document.getElementById('purchaseTractorSelect');
+      if (pTractor) {
+        const available = DB.tractors.filter(t => t.status === 'Available');
+        pTractor.innerHTML = (available.length > 0 ? available : DB.tractors).map(t => `<option value="${t.id}">${t.model} (${t.hp} HP) - ₹${t.price.toLocaleString()} [${t.status}]</option>`).join('');
+      }
+
+      // 6. Purchase Dealer Select
+      const pDealer = document.getElementById('purchaseDealerSelect');
+      if (pDealer) {
+        pDealer.innerHTML = DB.dealers.map(d => `<option value="${d.id}">${d.name} (${d.region})</option>`).join('');
+        if (currentUser.role === 'dealer') {
+          pDealer.value = currentUser.id;
+        }
+      }
+
+      // 7. Purchase Scheme Select
+      const pScheme = document.getElementById('purchaseSchemeSelect');
+      if (pScheme) {
+        pScheme.innerHTML = `<option value="">No Subsidy Scheme</option>` + DB.schemes.map(s => `<option value="${s.id}">${s.name} (${s.subsidyPct}% Subsidy)</option>`).join('');
+      }
+
+      // 8. Loan Farmer Select
+      const lFarmer = document.getElementById('loanFarmerSelect');
+      if (lFarmer) {
+        lFarmer.innerHTML = DB.farmers.map(f => `<option value="${f.id}">${f.name} (${f.id})</option>`).join('');
+      }
+
+      // 9. Tractor Dealer Select
+      const tDealer = document.getElementById('tractorDealerSelect');
+      if (tDealer) {
+        tDealer.innerHTML = DB.dealers.map(d => `<option value="${d.id}">${d.name} (${d.region})</option>`).join('');
+        if (currentUser.role === 'dealer') {
+          tDealer.value = currentUser.id;
+        }
+      }
+    }
+
+    // ==========================================
+    // UTILITIES & DEMO RESET
+    // ==========================================
+    function resetToSampleData() {
+      if (confirm("Reset local/cloud state to standard agricultural fleet sample records?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        DB = loadDB();
+        saveDB("System database reset to initial demonstration records");
+        showCloudToast("Database reset to demo records!");
+      }
+    }
+
+    function exportDatabaseJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DB, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "tractor_fleet_cloud_db.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function showCloudToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = "fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-slate-700 animate-bounce";
+      toast.innerHTML = `<i data-lucide="cloud" class="w-4 h-4 text-emerald-400"></i><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateAuthUI();
+      renderAll();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
