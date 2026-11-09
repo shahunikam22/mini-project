@@ -15,21 +15,6 @@ A unified, multi-tenant agricultural machinery fleet, subsidy, and loan financin
    - Employs the HTML5 `BroadcastChannel` and persistent client storage.
    - Any transaction logged in one browser tab (e.g., as a Dealer) instantly synchronizes across all open windows (e.g., the Admin dashboard) with a live activity feed.
 ---
-## 🚀 How to Run Locally
-### Option 1: Run with Python Web Server (Recommended)
-From your terminal or PowerShell, run:
-```powershell
-python "C:\Users\91774\.gemini\antigravity\scratch\tractor-fleet-flow\server.py"
-```
-Then open [http://localhost:8000](http://localhost:8000) in your web browser.
-### Option 2: Direct Browser Launch
-Open the file directly:
-```powershell
-start "C:\Users\91774\.gemini\antigravity\scratch\tractor-fleet-flow\index.html"
-```
----
-## 🌐 Deploying to the Web
-Because this application is self-contained with no server-side build dependencies, you can deploy it in seconds:
-1. **GitHub Pages**: Push this directory to a repository and enable GitHub Pages in settings.
-2. **Netlify / Vercel**: Drag and drop this folder directly into the Netlify Drop or Vercel dashboard.
-3. **Base44**: Use the prompt in the project upgrade specification to apply these exact schemas and views directly to your Base44 cloud project.
+
+Website link:
+https://shahunikam22.github.io/mini-project/
